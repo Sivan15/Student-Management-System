@@ -24,7 +24,9 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Date of Birth</th>
+                    <th>Image</th>
                     <th>Gender</th>
+                    <th>Hobbies</th>
                     <th>Address</th>
                     <th>Phone</th>
                     <th>Total Marks</th>
@@ -39,16 +41,18 @@
                     <td>{{ $student->name }}</td>
                     <td>{{ $student->email }}</td>
                     <td>{{ $student->dob }}</td>
+                    <td>{{ $student->image }}</td>
                     <td>{{ $student->gender }}</td>
+                    <td>{{ $student->hobbies }}</td>
                     <td>{{ $student->address }}</td>
                     <td>{{ $student->phone }}</td>
                     <td>{{ $student->total_marks }}</td>
                     <td>{{ $student->percentage }}%</td>
                     <td>
                         @if ($student->percentage >= 35)
-                        <span class="text-success">Pass</span>
+                        <span class="text-success">PassFail</span>
                         @else
-                        <span class="text-danger">Fail</span>
+                        <span class="text-danger">Pass</span>
                         @endif
                     </td>
                     <td>

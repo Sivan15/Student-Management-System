@@ -35,9 +35,9 @@
                 <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}" required>
             </div>
             <div class="mb-3">
-                <label for="dob" class="form-label">Date of Birth</label>
-                <input type="date" name="dob" class="form-control" id="dob" value="{{ old('dob') }}" required>
-            </div>
+        <label for="dob" class="form-label">Date of Birth</label>
+        <input type="date" name="dob" class="form-control" id="dob" value="{{ old('dob') }}" required>
+    </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Profile Image</label>
                 <input type="file" name="image" class="form-control" id="image">
@@ -51,15 +51,15 @@
                 <input type="text" name="phone" class="form-control" id="phone" value="{{ old('phone') }}">
             </div>
             <div class="mb-3">
-                <label class="form-label">Hobbies</label><br>
-                @foreach($hobbies as $hobby)
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="hobbies[]" id="hobby_{{ $hobby->id }}" value="{{ $hobby->id }}"
-                            {{ is_array(old('hobbies')) && in_array($hobby->id, old('hobbies')) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="hobby_{{ $hobby->id }}">{{ $hobby->name }}</label>
-                    </div>
-                @endforeach
-            </div>
+        <label for="hobbies" class="form-label">Hobbies</label>
+        <select name="hobbies[]" class="form-select" id="hobbies" multiple>
+            <!-- Populate with options -->
+            <option value="Reading" {{ in_array('Reading', old('hobbies', [])) ? 'selected' : '' }}>Reading</option>
+            <option value="Writing" {{ in_array('Writing', old('hobbies', [])) ? 'selected' : '' }}>Writing</option>
+            <option value="Sports" {{ in_array('Sports', old('hobbies', [])) ? 'selected' : '' }}>Sports</option>
+        </select>
+    </div>
+
             <div class="mb-3">
                 <label for="gender" class="form-label">Gender</label>
                 <select name="gender" class="form-select" id="gender" required>

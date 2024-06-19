@@ -36,8 +36,7 @@ class StudentController extends Controller
             'maths' => 'required|integer|min:0|max:100',
             'science' => 'required|integer|min:0|max:100',
             'soc_science' => 'required|integer|min:0|max:100',
-            'hobbies' => 'nullable|array',
-            'hobbies.*' => 'exists:hobbies,id',
+            'hobbies.*' => 'string',
             'image' => 'nullable|image|max:2048',
         ]);
 
@@ -45,19 +44,23 @@ class StudentController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $studentData = $request->except(['_token', 'image', 'hobbies']);
+        $studentData = $request->except(['_token', 'image']);
         $studentData['total_marks'] = $request->tamil + $request->english + $request->maths + $request->science + $request->soc_science;
         $studentData['percentage'] = ($studentData['total_marks'] / 500) * 100;
         $studentData['grade'] = $this->calculateGrade($studentData['percentage']);
+
+        if ($request->has('hobbies')) {
+            $studentData['hobbies'] = json_encode($request->hobbies); // Convert hobbies array to JSON
+        }
 
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('student_images', 'public');
             $studentData['image'] = $imagePath;
         }
 
-        $student = Student::create($studentData);
+        Student::create($studentData);
 
-        return redirect()->route('index')->with('status', 'Student added successfully.');
+        return redirect()->route('students.index')->with('status', 'Student added successfully.');
     }
 
     private function calculateGrade($percentage)
@@ -74,6 +77,7 @@ class StudentController extends Controller
             return 'Fail';
         }
     }
+
 
     public function edit($id)
     {
@@ -96,8 +100,7 @@ class StudentController extends Controller
             'maths' => 'required|integer|min:0|max:100',
             'science' => 'required|integer|min:0|max:100',
             'soc_science' => 'required|integer|min:0|max:100',
-            'hobbies' => 'nullable|array',
-            'hobbies.*' => 'nullable|exists:hobbies,id',
+            'hobbies.*' => 'string',
             'image' => 'nullable|image|max:2048', // 2MB max size for image
         ]);
 
