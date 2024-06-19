@@ -14,7 +14,8 @@ This is a Student Management System built using Laravel, HTML, and Bootstrap.
 3. Install JavaScript dependencies:npm install
 4. Migrate the database:php artisan migrate
 5. Seed the database with sample data:php artisan migrate:fresh --seed
-6. Set up the `.env` file with your database credentials and app name.
+6. Create a symbolic link from "storage" to "public/storage":php artisan storage:link
+7. Set up the `.env` file with your database credentials and app name.
 
 ## Running the Project
 
