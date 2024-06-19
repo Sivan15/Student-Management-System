@@ -8,10 +8,16 @@ use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
+    public function userDashboard()
+    {
+        $students = Student::paginate(10);
+        return view('userdashboard', compact('students'));
+    }
+
     public function index()
     {
-        $students = Student::all();
-        return view('index', compact('students'));
+        $students = Student::all(); 
+        return view('dashboard', compact('students'));
     }
 
     public function create()
@@ -41,11 +47,23 @@ class StudentController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Calculate total marks and percentage
+    
         $totalMarks = $request->tamil + $request->english + $request->maths + $request->science + $request->soc_science;
         $percentage = ($totalMarks / 500) * 100;
 
-        // Create student record
+
+        if ($percentage >= 90) {
+            $grade = 'A';
+        } elseif ($percentage >= 75) {
+            $grade = 'B';
+        } elseif ($percentage >= 50) {
+            $grade = 'C';
+        } elseif ($percentage >= 35) {
+            $grade = 'D';
+        } else {
+            $grade = 'F';
+        }
+
         $student = new Student();
         $student->name = $request->name;
         $student->email = $request->email;
@@ -59,6 +77,7 @@ class StudentController extends Controller
         $student->soc_science = $request->soc_science;
         $student->total_marks = $totalMarks;
         $student->percentage = $percentage;
+        $student->grade = $grade;
         $student->hobbies = $request->has('hobbies') ? json_encode($request->hobbies) : null;
         $student->address = $request->address;
 
@@ -70,7 +89,7 @@ class StudentController extends Controller
 
         $student->save();
 
-        return redirect()->route('students.index')->with('status', 'Student added successfully.');
+        return redirect()->route('dashboard')->with('status', 'Student added successfully.');
     }
 
     public function edit($id)
@@ -127,6 +146,6 @@ class StudentController extends Controller
         $student = Student::findOrFail($id);
         $student->delete();
 
-        return redirect()->route('students.index')->with('status', 'Student deleted successfully.');
+        return redirect()->route('dashboard')->with('status', 'Student deleted successfully.');
     }
 }

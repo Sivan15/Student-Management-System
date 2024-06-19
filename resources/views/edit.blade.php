@@ -84,12 +84,13 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label for="image" class="form-label">Profile Image</label>
-                                <input type="file" name="image" class="form-control" id="image">
-                                @if($student->image)
-                                    <img src="{{ asset('storage/' . $student->image) }}" alt="Profile Image" class="mt-2 img-thumbnail" style="max-width: 100px;">
-                                @endif
-                            </div>
+    <label for="image" class="form-label">Profile Image</label>
+    <input type="file" name="image" class="form-control" id="image">
+    @if($student->image)
+        <img src="{{ asset('storage/' . $student->image) }}" alt="Profile Image" class="mt-2 img-thumbnail" style="max-width: 100px;">
+    @endif
+</div>
+
                         </div>
                         <div class="mb-3">
                             <label for="address" class="form-label">Address</label>
