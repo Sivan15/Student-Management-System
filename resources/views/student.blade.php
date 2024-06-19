@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-
 </head>
 <body>
     <div class="container mt-5">
@@ -35,9 +32,10 @@
                 <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}" required>
             </div>
             <div class="mb-3">
-        <label for="dob" class="form-label">Date of Birth</label>
-        <input type="date" name="dob" class="form-control" id="dob" value="{{ old('dob') }}" required>
-    </div>
+                <label for="dob" class="form-label">Date of Birth</label>
+                <input type="date" name="dob" class="form-control" id="dob" value="{{ old('dob') }}" required>
+            </div>
+
             <div class="mb-3">
                 <label for="image" class="form-label">Profile Image</label>
                 <input type="file" name="image" class="form-control" id="image">
@@ -51,15 +49,13 @@
                 <input type="text" name="phone" class="form-control" id="phone" value="{{ old('phone') }}">
             </div>
             <div class="mb-3">
-        <label for="hobbies" class="form-label">Hobbies</label>
-        <select name="hobbies[]" class="form-select" id="hobbies" multiple>
-            <!-- Populate with options -->
-            <option value="Reading" {{ in_array('Reading', old('hobbies', [])) ? 'selected' : '' }}>Reading</option>
-            <option value="Writing" {{ in_array('Writing', old('hobbies', [])) ? 'selected' : '' }}>Writing</option>
-            <option value="Sports" {{ in_array('Sports', old('hobbies', [])) ? 'selected' : '' }}>Sports</option>
-        </select>
-    </div>
-
+                <label for="hobbies" class="form-label">Hobbies</label>
+                <select name="hobbies[]" class="form-select" id="hobbies" multiple>
+                    <option value="Reading" {{ in_array('Reading', old('hobbies', [])) ? 'selected' : '' }}>Reading</option>
+                    <option value="Writing" {{ in_array('Writing', old('hobbies', [])) ? 'selected' : '' }}>Writing</option>
+                    <option value="Sports" {{ in_array('Sports', old('hobbies', [])) ? 'selected' : '' }}>Sports</option>
+                </select>
+            </div>
             <div class="mb-3">
                 <label for="gender" class="form-label">Gender</label>
                 <select name="gender" class="form-select" id="gender" required>
@@ -96,27 +92,27 @@
                 <label for="percentage" class="form-label">Percentage</label>
                 <input type="text" name="percentage" class="form-control" id="percentage" value="{{ old('percentage') }}" readonly>
             </div>
+
             <button type="button" class="btn btn-primary" onclick="calculateMarks()">Calculate</button>
             <button type="submit" class="btn btn-success">Submit</button>
         </form>
     </div>
 
     <script>
-        function calculateMarks() {
-            let tamil = parseInt(document.getElementById('tamil').value) || 0;
-            let english = parseInt(document.getElementById('english').value) || 0;
-            let maths = parseInt(document.getElementById('maths').value) || 0;
-            let science = parseInt(document.getElementById('science').value) || 0;
-            let soc_science = parseInt(document.getElementById('soc_science').value) || 0;
+    function calculateMarks() {
+        let tamil = parseInt(document.getElementById('tamil').value) || 0;
+        let english = parseInt(document.getElementById('english').value) || 0;
+        let maths = parseInt(document.getElementById('maths').value) || 0;
+        let science = parseInt(document.getElementById('science').value) || 0;
+        let soc_science = parseInt(document.getElementById('soc_science').value) || 0;
 
-            let total_marks = tamil + english + maths + science + soc_science;
-            let percentage = (total_marks / 500) * 100;
+        let total_marks = tamil + english + maths + science + soc_science;
+        let percentage = (total_marks / 500) * 100;
 
-            document.getElementById('total_marks').value = total_marks;
-            document.getElementById('percentage').value = percentage.toFixed(2) + '%';
-        }
-    </script>
-
+        // Update the readonly inputs
+        document.getElementById('total_marks').value = total_marks;
+        document.getElementById('percentage').value = percentage.toFixed(2);
+    }
+</script>
 </body>
-
 </html>

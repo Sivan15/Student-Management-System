@@ -1,12 +1,9 @@
 <?php
 
-// app/Http/Controllers/StudentController.php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
-use App\Models\Hobby;
 use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
@@ -19,7 +16,6 @@ class StudentController extends Controller
 
     public function create()
     {
-        
         return view('student');
     }
 
@@ -36,7 +32,8 @@ class StudentController extends Controller
             'maths' => 'required|integer|min:0|max:100',
             'science' => 'required|integer|min:0|max:100',
             'soc_science' => 'required|integer|min:0|max:100',
-            'hobbies.*' => 'string',
+            'hobbies.*' => 'nullable|string',
+            'address' => 'nullable|string|max:255',
             'image' => 'nullable|image|max:2048',
         ]);
 
@@ -44,40 +41,37 @@ class StudentController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $studentData = $request->except(['_token', 'image']);
-        $studentData['total_marks'] = $request->tamil + $request->english + $request->maths + $request->science + $request->soc_science;
-        $studentData['percentage'] = ($studentData['total_marks'] / 500) * 100;
-        $studentData['grade'] = $this->calculateGrade($studentData['percentage']);
+        // Calculate total marks and percentage
+        $totalMarks = $request->tamil + $request->english + $request->maths + $request->science + $request->soc_science;
+        $percentage = ($totalMarks / 500) * 100;
 
-        if ($request->has('hobbies')) {
-            $studentData['hobbies'] = json_encode($request->hobbies); // Convert hobbies array to JSON
-        }
+        // Create student record
+        $student = new Student();
+        $student->name = $request->name;
+        $student->email = $request->email;
+        $student->dob = $request->dob;
+        $student->phone = $request->phone;
+        $student->gender = $request->gender;
+        $student->tamil = $request->tamil;
+        $student->english = $request->english;
+        $student->maths = $request->maths;
+        $student->science = $request->science;
+        $student->soc_science = $request->soc_science;
+        $student->total_marks = $totalMarks;
+        $student->percentage = $percentage;
+        $student->hobbies = $request->has('hobbies') ? json_encode($request->hobbies) : null;
+        $student->address = $request->address;
 
+        // Handle image upload if provided
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('student_images', 'public');
-            $studentData['image'] = $imagePath;
+            $student->image = $imagePath;
         }
 
-        Student::create($studentData);
+        $student->save();
 
         return redirect()->route('students.index')->with('status', 'Student added successfully.');
     }
-
-    private function calculateGrade($percentage)
-    {
-        if ($percentage >= 80) {
-            return 'A';
-        } elseif ($percentage >= 60) {
-            return 'B';
-        } elseif ($percentage >= 40) {
-            return 'C';
-        } elseif ($percentage >= 35) {
-            return 'D';
-        } else {
-            return 'Fail';
-        }
-    }
-
 
     public function edit($id)
     {
@@ -100,14 +94,17 @@ class StudentController extends Controller
             'maths' => 'required|integer|min:0|max:100',
             'science' => 'required|integer|min:0|max:100',
             'soc_science' => 'required|integer|min:0|max:100',
-            'hobbies.*' => 'string',
-            'image' => 'nullable|image|max:2048', // 2MB max size for image
+            'hobbies.*' => 'nullable|string',
+            'image' => 'nullable|image|max:2048', 
         ]);
 
         $studentData = $request->except(['_token', 'image', 'hobbies']);
         $studentData['total_marks'] = $request->tamil + $request->english + $request->maths + $request->science + $request->soc_science;
         $studentData['percentage'] = ($studentData['total_marks'] / 500) * 100;
-        $studentData['grade'] = $this->calculateGrade($studentData['percentage']);
+
+        if ($request->has('hobbies')) {
+            $studentData['hobbies'] = json_encode($request->hobbies);
+        }
 
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('student_images', 'public');
@@ -132,6 +129,4 @@ class StudentController extends Controller
 
         return redirect()->route('students.index')->with('status', 'Student deleted successfully.');
     }
-
-
 }
